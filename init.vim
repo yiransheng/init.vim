@@ -42,10 +42,11 @@ nnoremap <silent> `<Down> <C-w>j
 
 map! `1 <C-R>"
 
-nnoremap <S-j> :tabn<CR>
-nnoremap <S-h> :tabp<CR> 
+nnoremap <C-j> :tabn<CR>
+nnoremap <C-h> :tabp<CR> 
 nnoremap ee :tabe<CR>:FZF<CR>
 nnoremap eee :tabe<CR>
+nnoremap j<Enter> <S-$>i<CR><ESC>O
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => VIM user interface
@@ -379,8 +380,6 @@ inoremap {<cr> {<cr>}<c-o>O
 inoremap [<cr> [<cr>]<c-o>O
 inoremap (<cr> (<cr>)<c-o>O
 
-nnoremap fj 15j
-nnoremap fk 15k
 " Delete All but current buffer
 nnoremap dbb :BufOnly<CR>
 nnoremap dsp :on<CR>
@@ -447,6 +446,8 @@ set hidden
 
 let g:LanguageClient_serverCommands = {
     \ 'rust': ['rustup', 'run', 'nightly', 'rls'],
+    \ 'javascript': ['flow-language-server', '--stdio', '--try-flow-bin'],
+    \ 'javascript.jsx': ['flow-language-server', '--stdio', '--try-flow-bin']
     \ }
 
 " Automatically start language servers.
@@ -470,3 +471,8 @@ let g:esearch = {
   \ 'batch_size': 1000,
   \ 'use':        ['visual', 'hlsearch', 'last', 'word_under_cursor'],
   \}
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => neoterm
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:neoterm_size = 15
