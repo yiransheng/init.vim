@@ -31,6 +31,9 @@ set number
 
 " command Copy execute "w !xclip -selection c -i" 
 vnoremap <S-c> :w !xclip -selection c -i<CR><CR>
+" using this script: https://gist.github.com/yiransheng/4c8afc79bcdc797d1be9030e4b231fda
+vnoremap <leader>cf !textfmt.py --width=80<CR>
+
 map <F11> :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans<'
 			\ . synIDattr(synID(line("."),col("."),0),"name") . "> lo<"
 			\ . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">"<CR>
@@ -44,9 +47,11 @@ map! `1 <C-R>"
 
 nnoremap <C-j> :tabn<CR>
 nnoremap <C-h> :tabp<CR> 
-nnoremap ee :tabe<CR>:FZF<CR>
-nnoremap eee :tabe<CR>
-nnoremap j<Enter> <S-$>i<CR><ESC>O
+nnoremap <leader>e :tabe<CR>:FZF<CR>
+nnoremap <leader>ee :tabe<CR>
+nnoremap <leader><Enter> <S-$>i<CR><ESC>O
+" http://vim.wikia.com/wiki/Replace_a_word_with_yanked_text
+xnoremap p "_dP
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => VIM user interface
@@ -109,7 +114,6 @@ call plug#begin('~/.vim/plugged')
 " Shorthand notation; fetches https://github.com/junegunn/vim-easy-align
 Plug 'junegunn/vim-easy-align'
 
-
 " Any valid git URL is allowed
 Plug 'https://github.com/junegunn/vim-github-dashboard.git'
 
@@ -128,6 +132,9 @@ Plug 'nsf/gocode', { 'tag': 'v.20150303', 'rtp': 'vim' }
 
 " Plugin outside ~/.vim/plugged with post-update hook
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+
+" Swap things
+Plug 'tommcdo/vim-exchange'
 
 Plug 'https://github.com/kassio/neoterm.git'
 
@@ -172,6 +179,8 @@ Plug 'posva/vim-vue'
 Plug 'flowtype/vim-flow'
 
 Plug 'w0rp/ale'
+
+Plug 'jeetsukumaran/vim-buffergator'
 
 
 " Add plugins to &runtimepath
@@ -388,6 +397,7 @@ nnoremap <Leader>lc :lclose<CR>:cclose<CR>
 tnoremap <Esc> <C-\><C-n>
 
 autocmd FileType javascript setlocal formatprg=prettier\ --stdin
+autocmd FileType json setlocal formatprg=jsonpp5\ --stdin
 autocmd FileType rust setlocal formatprg=rustfmt
 autocmd FileType vue setlocal formatprg=prettier\ --stdin
 autocmd FileType css setlocal formatprg=postcss\ --no-map\ -u\ postcss-prettify
@@ -438,16 +448,16 @@ let g:ale_lint_on_text_changed = 'never'
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:rustfmt_autosave = 1
 
-
 autocmd BufReadPost *.rs setlocal filetype=rust
 
 " Required for operations modifying multiple buffers like rename.
 set hidden
 
+" \ 'javascript': ['flow-language-server', '--stdio', '--try-flow-bin'],
+" \ 'javascript.jsx': ['flow-language-server', '--stdio', '--try-flow-bin']
+"
 let g:LanguageClient_serverCommands = {
-    \ 'rust': ['rustup', 'run', 'nightly', 'rls'],
-    \ 'javascript': ['flow-language-server', '--stdio', '--try-flow-bin'],
-    \ 'javascript.jsx': ['flow-language-server', '--stdio', '--try-flow-bin']
+    \ 'rust': ['rustup', 'run', 'nightly', 'rls']
     \ }
 
 " Automatically start language servers.
@@ -456,6 +466,7 @@ let g:LanguageClient_autoStart = 1
 " Maps K to hover, gd to goto definition, F2 to rename
 nnoremap <silent> K :call LanguageClient_textDocument_hover()<CR>
 nnoremap <silent> gd :call LanguageClient_textDocument_definition()<CR>
+nnoremap <silent> <leader>gd :call LanguageClient_textDocument_references()<CR>
 nnoremap <silent> <F2> :call LanguageClient_textDocument_rename()
 
 " Auto complete
